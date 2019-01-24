@@ -1,2 +1,2 @@
 # Doppler Radar
-Repository of the Doppler Weather Radar Team as part of the Data Science @ Georgia Tech organization
+Repository of the Doppler Weather Radar Team as part of Data Science @ Georgia Tech
