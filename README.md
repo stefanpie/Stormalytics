@@ -1,2 +1,2 @@
 # Stormalytics
-Repository of the DStormalytics Team as part of Data Science @ Georgia Tech
+Repository of the Stormalytics Team as part of Data Science @ Georgia Tech
