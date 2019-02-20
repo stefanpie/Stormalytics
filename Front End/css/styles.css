@@ -1,0 +1,33 @@
+body {
+	background-color: #fff;
+}
+
+#mapid {
+	height: 100%;
+	width: 100%;
+	z-index: 99999;
+	flex: flex-grow;
+	flex-grow: 2;
+}
+
+.sideblocks {
+	background-color: #123;
+	height: 500px;
+	width: 500px;
+	margin: 20px;
+}
+
+#container {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+}
+
+.header {
+	font-family: 'Staatliches', cursive;
+}
+
+#leftblock {
+	background-color: #fff;
+	border: #000 8px solid;
+}
