@@ -1,4 +1,4 @@
-converter.py and convertAll.py execute a .jar tool in the command line to convert NEXRAD level 2 data into a more usable netCDF format.
+converter.py and convertAll.py execute a .jar tool in the command line to convert NEXRAD level 2 data into a more usable netCDF format.  converter.py converts one file at a time, while convertAll.py connverts multiple files at a time.
 
 Download toolsUI.jar and netCDFAll.jar from https://github.com/Unidata/thredds/releases/tag/v4.6.11 
 and place those jar files in the same directory as converter.py or convertAll.py.
