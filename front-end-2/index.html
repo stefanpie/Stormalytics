@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Stormalytics</title>
+	<meta name="author" content="Stefan Abi-Karam">
+	<meta name="Description" content="Stormalytics Release Webiste">
+
+
+	<script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.min.js" integrity="sha256-1KCNEBmmUm8Oo4IOlg7ZnbFjBZXxCa9bILP7eGDqYOY=" crossorigin="anonymous"></script>
+
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin="" />
+	<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+
+	<link rel="stylesheet" href="stylesheet.css" type="text/css" defer>
+	<script src="app.js" defer></script>
+
+
+	<!--
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js" integrity="sha256-J2sc79NPV/osLcIpzL3K8uJyAD7T5gaEFKlLDM18oxY=" crossorigin="anonymous" defer></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js" integrity="sha256-L3S3EDEk31HcLA5C6T2ovHvOcD80+fgqaCDt2BAi92o=" crossorigin="anonymous" defer></script>
+	-->
+</head>
+
+
+<body>
+	<div class="main-padding">
+		<div id="app" class="main-container">
+
+			<div id="map-wrapper">
+				<div id="map" class="card"></div>
+			</div>
+			<div id="left-col" class="card">
+				<h1>Stormlytics</h1>
+				<!--			<p>A project sponsored by Data Science @ Georgia Tech (DS@GT)</p>-->
+				<br>
+				<p>Nearest Dopplar Weather Rader Station:</p>
+				<p>null</p>
+				<br>
+				<p>Last Update:</p>
+				<p>null</p>
+				<br>
+				<p>Probability of Active Tornado:</p>
+				<p>null</p>
+			</div>
+
+		</div>
+	</div>
+</body>
+
+</html>
