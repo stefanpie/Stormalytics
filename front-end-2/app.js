@@ -5,13 +5,27 @@ var current_station = null;
 var current_station_marker = null;
 var national_composite_layer = null;
 var individual_dopplar_layer = null;
+var nexrad_layer = null;
 
 
 var map = L.map('map').setView(user_location, 8);
 var tile_layer = L.tileLayer('http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-	maxZoom: 18,
 	attributionControl: false
 }).addTo(map);
+
+nexrad_layer = L.tileLayer('http://www.mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png', {
+	opacity: 0.5
+}).addTo(map);
+L.control.scale().addTo(map);
+
+
+var baseLayers = {
+	"OpenStreetMap": tile_layer
+};
+var overlays = {
+	"Doppler Weather Radar": nexrad_layer
+};
+L.control.layers(baseLayers, overlays,{hideSingleBase: true}).addTo(map);
 
 if ("geolocation" in navigator) {
 	/* geolocation is available */
@@ -81,25 +95,7 @@ function calculate_and_set_nearest_staion() {
 
 	current_station_marker = L.marker([current_station['LATITUDE'], current_station['LONGITUDE']]).addTo(map);
 	current_station_marker.bindPopup("Selected Radar:<br>" + current_station['STATION_ID'] + " - " + current_station['STATION']);
-}
-
-
-function load_national_composit_doppler_radar_overlay() {
-
-	var imageUrl = 'http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif',
-		imageBounds = [[50.406626367301044, -66.517937876818], [21.652538062803, -127.620375523875420]];
-
-	national_composite_layer = L.imageOverlay(imageUrl, imageBounds, {
-		opacity: 0.1
-	});
-}
-
-function load_current_dopplar_radar_overlay() {
-
-	$.getJSON('./cached_dopplar_radar_data.json', function (dopplar_data) {
-		var result = dopplar_data.filter(function(obj) {
-			return "K" + toString(obj.name) === current_station['STATION_ID'];
-		});
-	});
+	$('#current-station-data').text(current_station['STATION_ID'] + " - " + current_station['STATION']);
 
 }
+
