@@ -1,0 +1,40 @@
+Feature Extaction List for Level II Doppler Weather Radar Scans
+
+Radar Station / Whole Scan Data
+
+- Latitude of radar station
+- Longitude of radar station
+- Elevation of radar station
+- Timestamp data: month, day, hour, minute (maybe seconds but appears not necessary)
+
+- Reflecticy 
+
+- Lowest elevation angle for refelctivity scan
+- Lowest elevation angle for relative velocity scan
+- Lowest elevation angle for specrtum width scan
+
+- Lowest elevation gate count for refelctivity scan
+- Lowest elevation gate count for relative velocity scan
+- Lowest elevation gate count for specrtum width scan
+
+- Lowest elevation angle count for refelctivity scan
+- Lowest elevation angle count for relative velocity scan
+- Lowest elevation angle count for specrtum width scan
+
+Layer Data (will use lowest layer for initial models)
+
+- Binned refelctivity data
+- Binned relative velocity data
+- Binned specrtum width data
+
+- Binned gate gate-to-gate absolute difference refelctivity data
+- Binned gate gate-to-gate absolute difference relative velocity data
+- Binned gate gate-to-gate absolute difference specrtum width data
+
+- Binned azimuth gate-to-gate absolute difference refelctivity data
+- Binned azimuth gate-to-gate absolute difference relative velocity data
+- Binned azimuth gate-to-gate absolute difference specrtum width data
+
+* Binned cross-corelation data between refelctivity and relative velocity
+* Binned cross-corelation data between refelctivity and specrtum width
+* Binned cross-corelation data between relative velocity and specrtum width
