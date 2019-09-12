@@ -25,7 +25,7 @@ var baseLayers = {
 var overlays = {
 	"Doppler Weather Radar": nexrad_layer
 };
-L.control.layers(baseLayers, overlays,{hideSingleBase: true}).addTo(map);
+L.control.layers(baseLayers, overlays, { hideSingleBase: true }).addTo(map);
 
 if ("geolocation" in navigator) {
 	/* geolocation is available */
@@ -98,4 +98,3 @@ function calculate_and_set_nearest_staion() {
 	$('#current-station-data').text(current_station['STATION_ID'] + " - " + current_station['STATION']);
 
 }
-

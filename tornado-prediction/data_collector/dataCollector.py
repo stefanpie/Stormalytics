@@ -19,7 +19,7 @@ for link in soup.find_all('a'):
 			if (k >= 6):
 				if (link1.find_next("a") == None):
 					#testfile.retrieve('https://nomads.ncep.noaa.gov/pub/data/nccf/radar/nexrad_level2/' + link['href'] + link1['href'], "./out/" + link['href'])
-					os.system("wget -O ./in/" + link['href'][:-1] + " https://mesonet-nexrad.agron.iastate.edu/level2/raw/" + link['href'] + link1['href'])
+					os.system("curl -o ./in/" + link['href'][:-1] + " https://mesonet-nexrad.agron.iastate.edu/level2/raw/" + link['href'] + link1['href'])
 					print(link['href'] + link1.find_previous("a")['href'])
 			k = k + 1
 	i = i + 1
