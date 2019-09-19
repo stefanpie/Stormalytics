@@ -12,16 +12,18 @@ i = 0
 for link in soup.find_all('a'):
 	k = 0
 	if (i >= 6):
-		print(link['href'])
-		res1 = requests.get('https://mesonet-nexrad.agron.iastate.edu/level2/raw/' + link['href'])
-		soup1 = bs4.BeautifulSoup(res1.text, 'lxml')
-		for link1 in soup1.find_all('a'):
-			if (k >= 6):
-				if (link1.find_next("a") == None):
-					#testfile.retrieve('https://nomads.ncep.noaa.gov/pub/data/nccf/radar/nexrad_level2/' + link['href'] + link1['href'], "./out/" + link['href'])
-					os.system("curl -o ./in/" + link['href'][:-1] + " https://mesonet-nexrad.agron.iastate.edu/level2/raw/" + link['href'] + link1['href'])
-					print(link['href'] + link1.find_previous("a")['href'])
-			k = k + 1
+		#print(link['href'])
+		if (link['href'][0] == 'K'):
+			res1 = requests.get('https://mesonet-nexrad.agron.iastate.edu/level2/raw/' + link['href'])
+			soup1 = bs4.BeautifulSoup(res1.text, 'lxml')
+			for link1 in soup1.find_all('a'):
+				if (k >= 6):
+					if (link1.find_next("a") == None):
+						#testfile.retrieve('https://nomads.ncep.noaa.gov/pub/data/nccf/radar/nexrad_level2/' + link['href'] + link1['href'], "./out/" + link['href'])
+						#print(link['href'] + link1['href'])
+						os.system("wget -O ./in/" + link['href'][:-1] + " https://mesonet-nexrad.agron.iastate.edu/level2/raw/" + link['href'] + link1.find_previous("a")['href'])
+						print(link['href'] + link1.find_previous("a")['href'])
+				k = k + 1
 	i = i + 1
 
 path = '.'
