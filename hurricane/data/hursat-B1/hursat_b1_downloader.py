@@ -14,7 +14,7 @@ def get_downloaded_hurricanes():
         index = open("index.csv", "r")
         lines = index.readlines()[1:]
         for line in lines:
-            to_return.add(line.split()[0])
+            to_return.add(line.split(",")[0])
         index.close()
         return to_return
     except FileNotFoundError:
@@ -25,7 +25,6 @@ def get_downloaded_hurricanes():
 def find_links(url):
     found_links = []
     lines = requests.request("GET", url).text.split("\n")
-    print(lines)
     for line in lines:
         if "<tr><td" == line[:7]:
             found_links.append(url + line.split("\"")[3])
@@ -34,8 +33,8 @@ def find_links(url):
 
 #if the csv is empty, adds the labels
 def prep_csv():
-    index = open("index.csv", "w")
-    if not os.path.getsize("index.csv"): #if the file is empty
+    index = open("index.csv", "a")
+    if os.path.getsize("index.csv") == 0: #if the file is empty
         index.write("filename, start_year, start_day, hemisphere, lat, lon, name, acquisition_date\n")
     index.close()
 
