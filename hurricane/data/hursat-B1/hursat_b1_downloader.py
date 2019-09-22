@@ -59,7 +59,7 @@ def filename_to_csv(filename):
 def main():
     prep_csv()
     downloaded_hurricanes = get_downloaded_hurricanes()
-    os.makedirs("data", exist_ok=True)  # Makes the data folder if it's not already there
+    os.makedirs("raw_data", exist_ok=True)  # Makes the data folder if it's not already there
     year_links = find_links(BASE_URL)
     for year_link in year_links:
         print("Entering folder {}".format(year_link))
@@ -69,7 +69,7 @@ def main():
             if filename not in downloaded_hurricanes:
                 print("Downloading {}".format(filename))
                 try:
-                    rq.urlretrieve(file_link, "data/{}".format(filename))
+                    rq.urlretrieve(file_link, "raw_data/{}".format(filename))
                     filename_to_csv(filename)
                 except Exception:
                     print("Failed to download file")
@@ -79,5 +79,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-
-

@@ -16,6 +16,11 @@ from sklearn.metrics import r2_score, mean_squared_error
 
 from pyproj import Geod
 from geopy.distance import geodesic
+import sys, os
+sys.path.append(os.path.abspath('../utils'))
+
+
+from geo_calculations import vincenty_inverse, haversine
 
 import matplotlib.pyplot as plt
 from matplotlib import collections as mc
@@ -30,9 +35,10 @@ import datetime
 pd.set_option('display.max_columns', 500)
 
 
-df = pd.read_csv('../../data/hurdat/hurdat2_processed.csv')
+df = pd.read_csv('../data/hurdat/hurdat2_processed.csv')
 df = df[df['year'] > 1979]
-df = df[df['system_status'] == 'HU']
+# df = df[df['system_status'] == 'HU']
+df = df[df['wind_radii_34_NE'] != -999]
 
 
 
@@ -53,23 +59,14 @@ input_features = ['year', 'month', 'day',
 				  'longitude', 'latitude',
 				  'max_sus_wind', 'min_pressure',
 				  'delta_distance', 'azimuth',
-				  'year-6', 'month-6', 'day-6',
-				  'hour-6', 'minute-6',
 				  'longitude-6', 'latitude-6',
 				  'max_sus_wind-6', 'min_pressure-6',
 				  'delta_distance-6', 'azimuth-6',
-				  'year-12', 'month-12', 'day-12',
-				  'hour-12', 'minute-12',
 				  'longitude-12', 'latitude-12',
 				  'max_sus_wind-12', 'min_pressure-12',
 				  'delta_distance-12', 'azimuth-12',
 				  'day_of_year', 'minute_of_day',
-				  'day_of_year-6', 'minute_of_day-6',
-				  'day_of_year-12', 'minute_of_day-12',
-				  'aday','aday-6','aday-12',
-				  'x','y',
-				  'x-6','y-6',
-				  'x-12','y-12',
+				  'aday',
 				  'vpre','vpre-6','vpre-12',
 				  'landfall','landfall-6','landfall-12']
 
@@ -78,15 +75,16 @@ for wind_speed in ['34', '50', '64']:
 		wind_radii_column_name = 'wind_radii_' + wind_speed + '_' + direction
 		input_features.append(wind_radii_column_name)
 
-output_features = ['latitude+6', 'longitude+6', 'max_sus_wind+6', 'min_pressure+6']
+output_features = ['latitude+24', 'longitude+24', 'max_sus_wind+24', 'min_pressure+24']
 
 for col in df.columns: 
     print(col) 
 
-# print(df)
+print(df[input_features].head())
 
 x = np.array(df[input_features].values.tolist())
 y = np.array(df[output_features].values.tolist())
+storm_ids = np.array(df['atcf_code'].values.tolist())
 
 scaler_x = MinMaxScaler()
 scaler_y = MinMaxScaler()
@@ -94,7 +92,9 @@ scaler_y = MinMaxScaler()
 x_scaled = scaler_x.fit_transform(x)
 y_scaled = scaler_y.fit_transform(y)
 
-x_train, x_test, y_train, y_test = train_test_split(x_scaled, y_scaled, test_size=0.3, random_state=42)
+x_train, x_test, y_train, y_test, storm_ids_train, storm_ids_test = train_test_split(x_scaled, y_scaled, storm_ids, test_size=0.3, random_state=42)
+
+
 
 linear = LinearRegression()
 lasso = Lasso()
@@ -104,12 +104,12 @@ b_ridge = BayesianRidge(verbose=True)
 huber = HuberRegressor()
 svr = SVR(verbose=True, tol=0.001, kernel ='rbf')
 gb = GradientBoostingRegressor(n_estimators = 500, max_depth = 8, verbose = 1)
-mlp_reg = MLPRegressor((128,128,128,64,32), activation='relu',
+mlp_reg = MLPRegressor((512,512,512,512,64,1), activation='tanh',
 					   verbose=True,max_iter=200,
 					   tol=0.0000001,
 					   learning_rate='adaptive')
 
-multi = MultiOutputRegressor(linear)
+multi = MultiOutputRegressor(svr)
 
 multi.fit(x_train, y_train)
 y_pred = multi.predict(x_test)
@@ -125,28 +125,27 @@ results_df = pd.DataFrame(results)
 results_df.columns = ['lat_test', 'lon_test', 'max_sus_wind_test', 'min_pressure_test',
 					  'lat_pred', 'lon_pred', 'max_sus_wind_pred', 'min_pressure_pred']
 
-results_df = results_df[results_df['max_sus_wind_pred'] > 0]
-results_df = results_df[results_df['max_sus_wind_pred'] < 200]
+
 print(results_df.describe())
 
-wgs84_geod = Geod(ellps='WGS84')
 def delta_distance_azimuth(lat1,lon1,lat2,lon2):
-	pos_1 = (lat1,lon1)
-	pos_2 = (lat2,lon2)
-	dist = wgs84_geod.inv(lon1,lat1,lon2,lat2)
-	dist = [x / 1000.0 for x in dist]
-	return dist
+	pos_1 = np.hstack((lat1,lon1))
+	pos_2 = np.hstack((lat2,lon2))
+	# dist, a1, a2 = vincenty_inverse(pos_1,pos_2)
+	dist = haversine(pos_1,pos_2)
+	# dist, a1, a2 = wgs84_geod.inv(lon1,lat1,lon2,lat2)
+	# dist = [x / 1000.0 for x in dist]
+	dist_km = dist/1000
+	return dist_km
 
-
+results_df['storm_id'] = storm_ids_test
 results_df['error_distance'] = delta_distance_azimuth(results_df['lat_test'].tolist(),results_df['lon_test'].tolist(),results_df['lat_pred'].tolist(),results_df['lon_pred'].tolist())
 results_df['error_wind'] = results_df['max_sus_wind_pred']-results_df['max_sus_wind_test']
 results_df['error_pressure'] = results_df['min_pressure_pred']-results_df['min_pressure_test']
 
+# print(results_df[results_df['error_distance'] > 10000])
 
-
-# print(results_df)
-
-
+# results_df[results_df['error_distance'] > 10000].to_csv('big_error.csv')
 
 data = []
 for i in results_df.values.tolist()[:]:
@@ -171,3 +170,14 @@ plt.show()
 
 results_df.boxplot(column=['error_pressure'])
 plt.show()
+
+# corr_df = df[input_features]
+# corr_df['latitude+24'] = df['latitude+24'].tolist()
+# corr_df['longitude+24'] = df['longitude+24'].tolist()
+
+# plt.imshow(corr_df.corr(), cmap='RdBu_r')
+# plt.colorbar()
+# tick_marks = [i for i in range(len(corr_df.columns))]
+# plt.xticks(tick_marks, corr_df.columns, rotation='vertical')
+# plt.yticks(tick_marks, corr_df.columns)
+# plt.show()

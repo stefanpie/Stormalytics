@@ -9,10 +9,8 @@ from numpy import sqrt as sqrt
 from numpy import tan as tan
 from numpy import arcsin as arcsin
 import time
-import random
 from pprint import pprint
 
-random.seed(0)
 
 # Haversine Formula
 # https://en.wikipedia.org/wiki/Haversine_formula
@@ -44,7 +42,7 @@ def haversine(coord1, coord2):
 # Inverse Vincenty's Formulae
 # https://en.wikipedia.org/wiki/Vincenty%27s_formulae
 
-def vincenty_inverse(coord1, coord2, maxIter=500, tol=10**-14):
+def vincenty_inverse(coord1, coord2, maxIter=1000, tol=10**-16):
 
     coord1 = np.asarray(coord1).reshape((-1, 2))
     coord2 = np.asarray(coord2).reshape((-1, 2))
@@ -98,7 +96,7 @@ def vincenty_inverse(coord1, coord2, maxIter=500, tol=10**-14):
 
         # successful convergence
         diff = abs(Lambda_prev-Lambda)
-        if diff.all() <= tol:
+        if np.amax(diff) <= tol:
             break
 
     u_sq = cos_sq_alpha*((a**2-b**2)/b**2)
@@ -125,13 +123,13 @@ if __name__ == "__main__":
     points_1 = []
     points_2 = []
     for x in range(10000):
-        points_1.append([0, 0])
-        points_2.append([0.5, 179.5])
+        points_1.append([17.5, -56.4])
+        points_2.append([18.28926911, -56.86163531])
         
 
     t0 = time.time()
     answer = vincenty_inverse(np.asarray(points_1), np.asarray(points_2))
     t1 = time.time()
     total_n = t1-t0
-    pprint(answer)
+    pprint(answer[0]/1000)
     pprint(total_n)
