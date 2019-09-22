@@ -48,6 +48,22 @@ for line in data_file_lines[:]:
         data['longitude'] = lon
         data['max_sus_wind'] = float(line_data[6])
         data['min_pressure'] = float(line_data[7])
+
+        data['wind_radii_34_NE'] = float(line_data[8])
+        data['wind_radii_34_SE'] = float(line_data[9])
+        data['wind_radii_34_SW'] = float(line_data[10])
+        data['wind_radii_34_NW'] = float(line_data[11])
+
+        data['wind_radii_50_NE'] = float(line_data[12])
+        data['wind_radii_50_SE'] = float(line_data[13])
+        data['wind_radii_50_SW'] = float(line_data[14])
+        data['wind_radii_50_NW'] = float(line_data[15])
+
+        data['wind_radii_64_NE'] = float(line_data[16])
+        data['wind_radii_64_SE'] = float(line_data[17])
+        data['wind_radii_64_SW'] = float(line_data[18])
+        data['wind_radii_64_NW'] = float(line_data[19])
+        
         hurdat.append(data)
 
 # print(hurdat)
@@ -194,8 +210,9 @@ print("Calculating landfall feature...")
 # hurricane_df_list = list(map(calculate_landfall, hurricane_df_list))
 hurricane_df_list = Parallel(n_jobs=-1,verbose=0)(delayed(calculate_landfall)(h_df) for h_df in hurricane_df_list)
 
+print("Calculating time shifted feature...")
 # hurricane_df_list = list(map(calculate_time_shifted_features, hurricane_df_list))
-# hurricane_df_list = Parallel(n_jobs=-1,verbose=11)(delayed(calculate_time_shifted_features)(h_df) for h_df in hurricane_df_list)
+hurricane_df_list = Parallel(n_jobs=-1,verbose=11)(delayed(calculate_time_shifted_features)(h_df) for h_df in hurricane_df_list)
 
 print("Done")
 

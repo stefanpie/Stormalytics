@@ -15,8 +15,13 @@ from sklearn.multioutput import MultiOutputRegressor
 from sklearn.metrics import r2_score, mean_squared_error
 
 from pyproj import Geod
+from geopy.distance import geodesic
+
 import matplotlib.pyplot as plt
-from matplotlib import collections  as mc
+from matplotlib import collections as mc
+import seaborn as sns
+
+
 
 
 import datetime
@@ -25,8 +30,11 @@ import datetime
 pd.set_option('display.max_columns', 500)
 
 
-df = pd.read_csv('./hurdat2_processed.csv')
-df = df[df.system_status == 'HU']
+df = pd.read_csv('../../data/hurdat/hurdat2_processed.csv')
+df = df[df['year'] > 1979]
+df = df[df['system_status'] == 'HU']
+
+
 
 
 
@@ -64,15 +72,18 @@ input_features = ['year', 'month', 'day',
 				  'x-12','y-12',
 				  'vpre','vpre-6','vpre-12',
 				  'landfall','landfall-6','landfall-12']
-for col in df.columns:
-    if 'system_status-12_' in col or 'system_status-6_' in col or 'system_status_' in col:
-            input_features.append(col)
-output_features = ['latitude+24', 'longitude+24', 'max_sus_wind+24', 'min_pressure+24']
+
+for wind_speed in ['34', '50', '64']:
+	for direction in ['NE', 'SE', 'SW', 'NW']:
+		wind_radii_column_name = 'wind_radii_' + wind_speed + '_' + direction
+		input_features.append(wind_radii_column_name)
+
+output_features = ['latitude+6', 'longitude+6', 'max_sus_wind+6', 'min_pressure+6']
 
 for col in df.columns: 
     print(col) 
 
-print(df)
+# print(df)
 
 x = np.array(df[input_features].values.tolist())
 y = np.array(df[output_features].values.tolist())
@@ -92,7 +103,7 @@ elastic = ElasticNet()
 b_ridge = BayesianRidge(verbose=True)
 huber = HuberRegressor()
 svr = SVR(verbose=True, tol=0.001, kernel ='rbf')
-gb = GradientBoostingRegressor(n_estimators = 500, max_depth = 5, verbose = 1)
+gb = GradientBoostingRegressor(n_estimators = 500, max_depth = 8, verbose = 1)
 mlp_reg = MLPRegressor((128,128,128,64,32), activation='relu',
 					   verbose=True,max_iter=200,
 					   tol=0.0000001,
@@ -106,18 +117,23 @@ y_pred = multi.predict(x_test)
 y_test = scaler_y.inverse_transform(y_test)
 y_pred = scaler_y.inverse_transform(y_pred)
 
-print(y_test)
-print(y_pred)
+# print(y_test)
+# print(y_pred)
 
 results = np.hstack((y_test,y_pred))
 results_df = pd.DataFrame(results)
 results_df.columns = ['lat_test', 'lon_test', 'max_sus_wind_test', 'min_pressure_test',
 					  'lat_pred', 'lon_pred', 'max_sus_wind_pred', 'min_pressure_pred']
 
+results_df = results_df[results_df['max_sus_wind_pred'] > 0]
+results_df = results_df[results_df['max_sus_wind_pred'] < 200]
+print(results_df.describe())
 
 wgs84_geod = Geod(ellps='WGS84')
 def delta_distance_azimuth(lat1,lon1,lat2,lon2):
-	az12, az21, dist = wgs84_geod.inv(lon1,lat1,lon2,lat2)
+	pos_1 = (lat1,lon1)
+	pos_2 = (lat2,lon2)
+	dist = wgs84_geod.inv(lon1,lat1,lon2,lat2)
 	dist = [x / 1000.0 for x in dist]
 	return dist
 
@@ -128,22 +144,9 @@ results_df['error_pressure'] = results_df['min_pressure_pred']-results_df['min_p
 
 
 
-print(results_df)
+# print(results_df)
 
 
-# # Plot feature importance
-# feature_importance = multi.estimators_[0].feature_importances_
-# # make importances relative to max importance
-# feature_importance = 100.0 * (feature_importance / feature_importance.max())
-# sorted_idx = np.argsort(feature_importance)[-10:]
-
-# pos = np.arange(sorted_idx.shape[0]) + .5
-# plt.subplot(1, 2, 2)
-# plt.barh(pos[-10:], feature_importance[sorted_idx], align='center')
-# plt.yticks(pos[-10:], np.array(input_features)[sorted_idx])
-# plt.xlabel('Relative Importance')
-# plt.title('Feature Importance')
-# plt.show()
 
 data = []
 for i in results_df.values.tolist()[:]:
@@ -155,6 +158,10 @@ ax.add_collection(lc)
 ax.autoscale()
 ax.margins(0.1)
 plt.show()
+
+sns.distplot(results_df['error_distance'])
+plt.show()
+
 
 results_df.boxplot(column=['error_distance'])
 plt.show()
