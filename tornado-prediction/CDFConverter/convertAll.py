@@ -1,5 +1,22 @@
 import subprocess
 import glob
+import os
+
+folder = './out'
+if (os.path.exists(folder)):
+	for the_file in os.listdir(folder):
+		file_path = os.path.join(folder, the_file)
+		try:
+			if os.path.isfile(file_path):
+				os.unlink(file_path)
+		except Exception as e:
+			print(e)
+else:
+	try:
+		os.mkdir(folder)
+	except OSError:
+		print ("Creation of the /out directory failed")
+
 path = '.'
 filenames = glob.glob(path + '/in/*')
 for filename in filenames: #runs through all files in ./in
