@@ -1,3 +1,4 @@
 *
 !.gitignore
 !hursat_b1_downloader.py
+!analysis.py
