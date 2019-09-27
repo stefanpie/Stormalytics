@@ -1,0 +1,7 @@
+You must place toolsUI-4.6.11.jar in this folder for convertAll.py to work
+
+1. Run either dataCollectorThredds.py or dataCollectorIAState.py
+2. Run convertAll.py
+3. Run feature-extraction.py
+
+These steps will create a CSV file of the extracted features from downloaded NEXRAD Level 2 files
