@@ -16,6 +16,10 @@ loaded_model = pickle.load(open(model_filename, 'rb'))
 
 data_in_df = pd.read_csv("recent_scans_processed.csv")
 station_ids = data_in_df["station_id"].values
+
+station_times = data_in_df["time_start"].values
+print(station_times)
+
 data_in_df.drop(['station_id', 'station_name', 'station_lat', 'station_lon', 'station_elevation', 'time_start'], axis=1, inplace=True)
 
 model_in  = np.asarray(data_in_df)
@@ -24,9 +28,12 @@ y_pred = loaded_model.predict_proba(model_in)
 print(y_pred[:,1])
 print(station_ids)
 
-dictionary = dict(zip(station_ids, y_pred[:,1]))
+dictionary = dict(zip(station_ids, zip(station_times, y_pred[:,1])))
 print(dictionary)
 
 
 with open('./prediction.json', 'w') as fp:
+    json.dump(dictionary, fp)
+
+with open('./static/prediction.json', 'w') as fp:
     json.dump(dictionary, fp)
