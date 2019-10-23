@@ -1,0 +1,23 @@
+<!--Edit this text area to see live preview to the right-->
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+    <style>
+        #l0, #l1{mix-blend-mode:multiply}
+    </style>
+    <defs>
+        <pattern id="tenthGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="black" stroke-width="0.5"/>
+        </pattern>
+    </defs>
+    <rect width="100" height="100" fill="white"/>
+    <!-- <rect width="100" height="100" fill="url(#tenthGrid)"/> -->
+    <!-- <polygon id="l0" points="50,40 70,50 50,60 30,50 50,40" fill="#20CCFF" stroke-width="2" stroke="#20CCFF" stroke-linejoin="round" transform="translate(-50, -40) scale(2)"/> -->
+	<!-- <polygon id="l1" points="50,40 70,50 50,60 30,50 50,40" fill="#597DFF" stroke-width="2" stroke="#597DFF" stroke-linejoin="round" transform="translate(-50, -50) scale(2)"/> -->
+    <!-- <polygon points="50,40 70,50 50,60 30,50 50,40" fill="#CCC" stroke-width="2" stroke="#CCC" stroke-linejoin="round" transform="translate(-50, -60) scale(2)"/> -->
+	<polygon id="l1" points="50,40 70,50 50,60 30,50 50,40" fill="#black" stroke-width="2" stroke="#black" stroke-linejoin="round" transform="translate(-50, -50) scale(2)"/>
+
+	<ellipse rx="20" ry="10" cx="50" cy="50" fill="white"/>
+	<ellipse rx="4" ry="2" cx="50" cy="50" fill="black"/>
+	<line x1="50" x2="50" y1="70" y2="30" stroke="black" stroke-dasharray="1,1.01"/>
+	<line x1="30" x2="70" y1="50" y2="50" stroke="black"/>
+
+</svg>

@@ -1,9 +1,0 @@
-server {
-
-    location /api/tornado-prediction {
-		
-		default_type application/json;
-		index r.json;
-		alias /root/tornado-prediction;
-    }
-}

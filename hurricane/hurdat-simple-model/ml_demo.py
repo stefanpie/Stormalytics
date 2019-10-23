@@ -35,7 +35,7 @@ import datetime
 pd.set_option('display.max_columns', 500)
 
 
-df = pd.read_csv('../data/hurdat/hurdat2_processed.csv')
+df = pd.read_csv('../raw_data/hurdat/hurdat2_processed.csv')
 df = df[df['year'] > 1979]
 # df = df[df['system_status'] == 'HU']
 df = df[df['wind_radii_34_NE'] != -999]

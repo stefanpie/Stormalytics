@@ -1,10 +1,11 @@
 import urllib.request
-import sys
+import os
 from tqdm import tqdm
 
 
 BASE_URL = r"https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2018-051019.txt"
 FILE_NAME = r"hurdat2-1851-2018-051019.txt"
+
 
 
 class DownloadProgressBar(tqdm):
@@ -14,14 +15,16 @@ class DownloadProgressBar(tqdm):
         self.update(b * bsize - self.n)
 
 
-def download_hurdat():
+def download_hurdat(data_dir):
     print("Downloading " + FILE_NAME)
     try:
         with DownloadProgressBar(unit='B', unit_scale=True, miniters=1) as t:
-            urllib.request.urlretrieve(BASE_URL, "./{}".format(FILE_NAME), reporthook=t.update_to)
+            os.makedirs(data_dir+"hurdat/", exist_ok=True) 
+            urllib.request.urlretrieve(BASE_URL, data_dir+"hurdat/"+FILE_NAME, reporthook=t.update_to)
     except Exception:
         print("Failed to download file")
 
 
 if __name__ == "__main__":
-    download_hurdat()
+    DATA_DIR = "../../data/"
+    download_hurdat(DATA_DIR)
