@@ -27,19 +27,19 @@ def download_oisst_single(t, raw_data_dir):
         print("Failed to download file: " + file_name)
 
 
-def download_oisst():
-    delta = END_DATE - START_DATE
-    dates = []
-    for i in range(delta.days + 1):
-        dates.append(START_DATE + datetime.timedelta(days=i))
-    raw_data_dir = "./raw_data/"
-    os.makedirs(raw_data_dir, exist_ok=True)
+# def download_oisst():
+#     delta = END_DATE - START_DATE
+#     dates = []
+#     for i in range(delta.days + 1):
+#         dates.append(START_DATE + datetime.timedelta(days=i))
+#     raw_data_dir = "./raw_data/"
+#     os.makedirs(raw_data_dir, exist_ok=True)
 
 
-    Parallel(n_jobs=-1,verbose=11)(delayed(download_oisst_single)(d, raw_data_dir) for d in dates)
+#     Parallel(n_jobs=-1,verbose=11)(delayed(download_oisst_single)(d, raw_data_dir) for d in dates)
 
-    # for date in dates:
-    #     download_oisst_single(date, raw_data_dir)
+#     # for date in dates:
+#     #     download_oisst_single(date, raw_data_dir)
         
 
 
