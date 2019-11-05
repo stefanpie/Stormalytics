@@ -34,9 +34,9 @@ def download_hursat_mw(data_dir):
         for hurricane_file in list_file_dir(year_folder): 
             hurricane_file_links.append(hurricane_file)
     print(hurricane_file_links.__len__())
-    for data_url in hurricane_file_links:
-        download_hursat_mw_file(data_url, data_dir)
-    # Parallel(n_jobs=-1, verbose=0)(delayed(download_hursat_mw_file)(data_url, data_dir) for data_url in hurricane_file_links)
+    # for data_url in hurricane_file_links:
+    #     download_hursat_mw_file(data_url, data_dir)
+    Parallel(n_jobs=-1, verbose=0)(delayed(download_hursat_mw_file)(data_url, data_dir) for data_url in hurricane_file_links)
 
 def extract_hursat_mw_tar_gz_file(fp, data_dir):
     dir_name  = os.path.basename(fp).replace('.tar.gz', '')
