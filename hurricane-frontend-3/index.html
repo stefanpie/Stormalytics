@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Hurricanes</title>
+    <meta name="author" content="Stefan Abi-Karam">
+    <meta name="Description" content="Hurricane Frontend">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous" defer></script>
+
+
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/561e86cf7c.js" crossorigin="anonymous"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,700,700i&display=swap&subset=latin-ext" rel="stylesheet">
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+
+    <!-- iso8601-js-period -->
+    <script src="https://cdn.jsdelivr.net/npm/iso8601-js-period@0.2.1/iso8601.min.js"></script>
+
+    <!-- Leaflet.TimeDimension -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.control.min.css" integrity="sha256-ixA0u8v4VIYgImzTBUaLJJdhrLmkVCoSNSeqWd1n7Cc=" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.min.js" integrity="sha256-VOTOG+GNNa3LOv79JcAq2JzxdG1sezpnX2HTNX8j7WA=" crossorigin="anonymous"></script>
+
+
+    <link rel="stylesheet" href="stylesheet.css" type="text/css" defer>
+    <script src="main.js" defer></script>
+
+</head>
+
+
+<body>
+    <div class="body-wrapper">
+
+
+
+        <div class="nav-bar">
+            <a href="#" class="brand-logo">
+                <!-- <i class="material-icons md-36">waves</i> -->
+                <i class="fas fa-water"></i> Stormalytics
+            </a>
+        </div>
+
+        <div class="side-bar">
+            <div class="side-bar-row">
+                <p class="sidebar-hedder">APPLICATIONS</p>
+            </div>
+            <div class="side-bar-row sidebar-link">
+                <a href="#">
+                    <i class="fas fa-map"></i> Strom Viewer
+                </a>
+            </div>
+            <div class="side-bar-row sidebar-link">
+                <a href="#">
+                    <i class="fas fa-satellite"></i> Satalite
+                </a>
+            </div>
+            <div class="side-bar-row sidebar-link">
+                <a href="#">
+                    <i class="fas fa-plane"></i> Dropsonde
+                </a>
+            </div>
+            <div class="side-bar-row sidebar-link">
+                <a href="#">
+                    <i class="fas fa-server"></i> GFS
+                </a>
+            </div>
+            <div class="side-bar-row">
+                <p class="sidebar-hedder">GENERAL</p>
+            </div>
+            <div class="side-bar-row sidebar-link">
+                <a href="#">
+                    <i class="fas fa-home"></i> Home
+                </a>
+            </div>
+            <div class="side-bar-row sidebar-link">
+                <a href="#">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
+            </div>
+            <div class="side-bar-row sidebar-link">
+                <a href="#">
+                    <i class="fas fa-paper-plane"></i> Contact
+                </a>
+            </div>
+        </div>
+
+
+        <div class="main-content">
+            <div id="leaflet-map">
+            </div>
+            <div id="map-data-controls">
+                <h3>Storm Select</h3>
+                <div id="storm-filter-input">
+                    <p><b>Storm Name</b></p>
+                    <input type="text" value="Sandy">
+                    <p><b>Year</b></p>
+                    <input type="number" min="1900" value="2012">
+                </div>
+                <table id="strom-select-table">
+                    <thead>
+                        <tr>
+                            <th>Storm Name</th>
+                            <th>Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy</td>
+                            <td>2012</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+            </div>
+            <div id="map-time-controls">
+                time controls
+            </div>
+            <div id="data-panel">
+                data stuff
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>

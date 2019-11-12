@@ -1,0 +1,195 @@
+* {
+    font-family: 'Muli', sans-serif;
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+.body-wrapper {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 64px 1fr;
+    grid-template-areas: "nav-bar nav-bar" "side-bar main-content";
+}
+
+.main-content {
+    grid-area: main-content;
+    /* background-color: #F9F9F9; */
+    /* background-color: #EEF5FD; */
+    background-color: white;
+    /* padding: 10px; */
+}
+
+.nav-bar {
+    grid-area: nav-bar;
+    background-color: #3F51B5;
+    color: white;
+    text-align: center;
+}
+
+.side-bar {
+    grid-area: side-bar;
+    background-color: white;
+    color: white;
+    font-size: 14px;
+    border-right: lightgrey solid 1px;
+    width: 200px;
+}
+
+.brand-logo {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 64px;
+    font-weight: bold;
+    font-size: 28px;
+    color: white;
+    text-decoration: none;
+}
+
+.side-bar-row {
+    width: 100%;
+    padding: 18px;
+    padding-left: 28px;
+    /* height: 40px; */
+}
+
+.sidebar-hedder {
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-size: .85rem;
+    color: #969696;
+}
+
+.sidebar-link {
+    transition: 0.3s;
+}
+
+.sidebar-link:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-link a {
+    text-decoration: none;
+    color: black;
+}
+
+.sidebar-link i {
+    color: #757575;
+    font-size: 1.3rem;
+    vertical-align: -15%;
+    margin-right: 15px;
+}
+
+.card {
+    background: white;
+    /* border-radius: 3px; */
+    /* padding: 20px; */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+
+/* 
+@media only screen and (min-width: 992px) {
+    .invesible-top {
+        top: 64px;
+        top: 0px;
+        z-index: 0;
+    }
+    #main {
+        margin-left: 200px;
+    }
+} */
+
+.main-content {
+    display: grid;
+    grid-template-columns: 9fr 3fr;
+    grid-template-rows: 500px auto auto;
+    grid-template-areas: "leaflet-map map-data-controls" "map-time-controls map-data-controls" "data-panel data-panel";
+    overflow-y: auto;
+    /* gap: 20px; */
+    /* padding: 20px; */
+}
+
+#leaflet-map {
+    grid-area: leaflet-map;
+    height: 500px;
+}
+
+#map-data-controls {
+    grid-area: map-data-controls;
+    border-bottom: lightgrey solid 1px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+#map-time-controls {
+    grid-area: map-time-controls;
+    border-right: lightgrey solid 1px;
+    border-bottom: lightgrey solid 1px;
+}
+
+#data-panel {
+    grid-area: data-panel;
+}
+
+#map-data-controls h3 {
+    text-align: center;
+    font-size: 24px;
+    margin: 5px;
+}
+
+#storm-filter-input {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#storm-filter-input input {
+    width: 100%;
+    padding: 5px;
+}
+
+#storm-filter-input p {
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#strom-select-table {
+    flex: 1;
+    width: 100%;
+    /* height: 100%; */
+    /*  */
+    /* height: 500px; */
+    display: block;
+    /* height: 400px; */
+    overflow-y: auto;
+}
+
+#strom-select-table tbody tr.selected {
+    color: white;
+    background-color: darkgray;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td,
+th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
