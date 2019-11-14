@@ -14,8 +14,8 @@ def daterange(start_date, end_date):
 
 data_dir = "../../data/"
 
-start_date = date(2018, 1, 1)
-end_date = date(2018, 2, 1)
+start_date = date(2017, 8, 30)
+end_date = date(2017, 9, 13)
 dates = list(daterange(start_date, end_date))
     
 
@@ -81,7 +81,8 @@ def index_gfs_data(data_dir):
         dict_writer.writeheader()
         dict_writer.writerows(index_data)
 
-
-# download_gfs_data(dates, data_dir)
-# convert_to_net_cdf(data_dir)
-# index_gfs_data(data_dir)
+if __name__ == "__main__":
+    
+    # download_gfs_data(dates, data_dir)
+    convert_to_net_cdf(data_dir)
+    index_gfs_data(data_dir)

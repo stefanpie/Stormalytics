@@ -8,10 +8,14 @@
     <title>Hurricanes</title>
     <meta name="author" content="Stefan Abi-Karam">
     <meta name="Description" content="Hurricane Frontend">
+    <link rel="manifest" href="./manifest.json">
+
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous" defer></script>
 
+    <!-- Axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
 
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/561e86cf7c.js" crossorigin="anonymous"></script>
@@ -25,10 +29,6 @@
 
     <!-- iso8601-js-period -->
     <script src="https://cdn.jsdelivr.net/npm/iso8601-js-period@0.2.1/iso8601.min.js"></script>
-
-    <!-- Leaflet.TimeDimension -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.control.min.css" integrity="sha256-ixA0u8v4VIYgImzTBUaLJJdhrLmkVCoSNSeqWd1n7Cc=" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.min.js" integrity="sha256-VOTOG+GNNa3LOv79JcAq2JzxdG1sezpnX2HTNX8j7WA=" crossorigin="anonymous"></script>
 
 
     <link rel="stylesheet" href="stylesheet.css" type="text/css" defer>
@@ -100,101 +100,31 @@
             <div id="map-data-controls">
                 <h3>Storm Select</h3>
                 <div id="storm-filter-input">
-                    <p><b>Storm Name</b></p>
-                    <input type="text" value="Sandy">
-                    <p><b>Year</b></p>
-                    <input type="number" min="1900" value="2012">
+                    <p><label for="storm-name"><b>Storm Name</b></label></p>
+                    <input type="text" name="storm-name" id="storm-name" value="">
+                    <p><label for="storm-year"><b>Year</b></label></p>
+                    <input type="number" name="storm-year" id="storm-year" min="1900" value="2012">
                 </div>
-                <table id="strom-select-table">
-                    <thead>
-                        <tr>
-                            <th>Storm Name</th>
-                            <th>Year</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
-                        <tr>
-                            <td>Sandy</td>
-                            <td>2012</td>
-                        </tr>
+                <div class="table-container">
+                    <table id="strom-select-table">
+                        <thead>
+                            <tr>
+                                <th>Storm Name</th>
+                                <th>Year</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
 
-                    </tbody>
+                    </table>
+                </div>
 
-                </table>
             </div>
-            <div id="map-time-controls">
+            <!-- <div id="map-time-controls">
                 time controls
-            </div>
+            </div> -->
             <div id="data-panel">
-                data stuff
+
             </div>
 
 
