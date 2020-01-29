@@ -3,11 +3,12 @@ import pandas as pd
 import numpy as np
 
 from sklearn.preprocessing import StandardScaler, RobustScaler, MinMaxScaler
-from sklearn.ensemble import BaggingRegressor
-from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import BaggingRegressor, GradientBoostingRegressor, VotingRegressor
 from sklearn.svm import SVR
 from sklearn.linear_model import LinearRegression, HuberRegressor, BayesianRidge, Lasso, ElasticNet, Ridge
 from sklearn.neural_network import MLPRegressor
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel, Matern, RationalQuadratic, ExpSineSquared
 
 
 from sklearn.model_selection import train_test_split
@@ -17,16 +18,13 @@ from sklearn.metrics import r2_score, mean_squared_error
 from pyproj import Geod
 from geopy.distance import geodesic
 import sys, os
+
 sys.path.append(os.path.abspath('../utils'))
-
-
 from geo_calculations import vincenty_inverse, haversine
 
 import matplotlib.pyplot as plt
 from matplotlib import collections as mc
 import seaborn as sns
-
-
 
 
 import datetime
@@ -35,9 +33,9 @@ import datetime
 pd.set_option('display.max_columns', 500)
 
 
-df = pd.read_csv('../raw_data/hurdat/hurdat2_processed.csv')
+df = pd.read_csv('../data/hurdat/hurdat2_processed.csv')
 df = df[df['year'] > 1979]
-# df = df[df['system_status'] == 'HU']
+df = df[(df['system_status'] == 'HU') | (df['system_status'] == 'TS')]
 df = df[df['wind_radii_34_NE'] != -999]
 
 
@@ -54,21 +52,39 @@ df = pd.concat([df,pd.get_dummies(df['system_status+24'], prefix='system_status+
 for col in df.columns: 
     print(col) 
 
-input_features = ['year', 'month', 'day',
-				  'hour', 'minute',
-				  'longitude', 'latitude',
-				  'max_sus_wind', 'min_pressure',
-				  'delta_distance', 'azimuth',
-				  'longitude-6', 'latitude-6',
-				  'max_sus_wind-6', 'min_pressure-6',
-				  'delta_distance-6', 'azimuth-6',
-				  'longitude-12', 'latitude-12',
-				  'max_sus_wind-12', 'min_pressure-12',
-				  'delta_distance-12', 'azimuth-12',
-				  'day_of_year', 'minute_of_day',
-				  'aday',
-				  'vpre','vpre-6','vpre-12',
-				  'landfall','landfall-6','landfall-12']
+input_features = []
+
+input_features_static = ['year', 'month', 'day', 'hour', 'day_of_year','aday']
+input_features += input_features_static
+
+input_features_time_shifted = ['longitude', 'latitude',
+							   'x','y',
+							   'max_sus_wind', 'min_pressure',
+							   'delta_distance', 'azimuth',
+							   'vpre', 'landfall']
+
+input_features += input_features_time_shifted
+for t in ['-6', '-12', '-18', '-24', '-30', '-36', '-42', '-48']:
+	input_features += [s + t for s in input_features_time_shifted]
+
+
+
+# input_features = ['year', 'month', 'day', 'hour',
+# 				  'longitude', 'latitude',
+# 				  'x','y',
+# 				  'max_sus_wind', 'min_pressure',
+# 				  'delta_distance', 'azimuth',
+# 				  'longitude-6', 'latitude-6',
+# 				  'x-6','y-6',
+# 				  'max_sus_wind-6', 'min_pressure-6',
+# 				  'delta_distance-6', 'azimuth-6',
+# 				  'longitude-12', 'latitude-12',
+# 				  'x-12','y-12',
+# 				  'max_sus_wind-12', 'min_pressure-12',
+# 				  'delta_distance-12', 'azimuth-12',
+# 				  'day_of_year','aday',
+# 				  'vpre','vpre-6','vpre-12',
+# 				  'landfall','landfall-6','landfall-12']
 
 for wind_speed in ['34', '50', '64']:
 	for direction in ['NE', 'SE', 'SW', 'NW']:
@@ -104,12 +120,17 @@ b_ridge = BayesianRidge(verbose=True)
 huber = HuberRegressor()
 svr = SVR(verbose=True, tol=0.001, kernel ='rbf')
 gb = GradientBoostingRegressor(n_estimators = 500, max_depth = 8, verbose = 1)
-mlp_reg = MLPRegressor((512,512,512,512,64,1), activation='tanh',
-					   verbose=True,max_iter=200,
-					   tol=0.0000001,
+mlp_reg = MLPRegressor((64,64,64,64,64,1), activation='tanh',
+					   verbose=True,max_iter=500,
+					   tol=0.000000001,
 					   learning_rate='adaptive')
 
-multi = MultiOutputRegressor(svr)
+g_kernel = DotProduct() + Matern() + RationalQuadratic()
+g_reg = GaussianProcessRegressor(kernel=g_kernel, random_state=0, normalize_y=True)
+
+er = VotingRegressor([('lr', linear)], n_jobs=-1)
+
+multi = MultiOutputRegressor(gb)
 
 multi.fit(x_train, y_train)
 y_pred = multi.predict(x_test)

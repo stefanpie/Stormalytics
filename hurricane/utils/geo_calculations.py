@@ -39,6 +39,7 @@ def haversine(coord1, coord2):
     return R * c
 
 
+
 # Inverse Vincenty's Formulae
 # https://en.wikipedia.org/wiki/Vincenty%27s_formulae
 

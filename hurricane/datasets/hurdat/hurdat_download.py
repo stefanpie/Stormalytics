@@ -3,8 +3,8 @@ import os
 from tqdm import tqdm
 
 
-BASE_URL = r"https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2018-051019.txt"
-FILE_NAME = r"hurdat2-1851-2018-051019.txt"
+BASE_URL = r"https://www.aoml.noaa.gov/hrd/hurdat/hurdat2.txt"
+FILE_NAME = r"hurdat2.txt"
 
 
 
