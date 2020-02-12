@@ -12,11 +12,7 @@ def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
-data_dir = "../../data/"
 
-start_date = date(2017, 8, 30)
-end_date = date(2017, 9, 13)
-dates = list(daterange(start_date, end_date))
     
 
 def download_gfs_data(dates, data_dir):
@@ -82,7 +78,13 @@ def index_gfs_data(data_dir):
         dict_writer.writerows(index_data)
 
 if __name__ == "__main__":
-    
-    # download_gfs_data(dates, data_dir)
+
+    data_dir = "../../data/"
+
+    start_date = date(2020, 1, 1)
+    end_date = date(2020, 1, 31)
+    dates = list(daterange(start_date, end_date))
+
+    download_gfs_data(dates, data_dir)
     convert_to_net_cdf(data_dir)
     index_gfs_data(data_dir)

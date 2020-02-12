@@ -12,9 +12,6 @@ from geojson import Polygon, Feature, FeatureCollection
 
 import netCDF4
 
-from cartopy import config
-import cartopy.crs as ccrs
-
 
 # get the path of the file. It can be found in the repo data directory.
 fname = "../../data/gfs/netcdf_data/gfsanl_3_20170904_0600_000.nc"
