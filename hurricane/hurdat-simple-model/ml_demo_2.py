@@ -3,23 +3,13 @@ import pandas as pd
 import numpy as np
 
 from sklearn.preprocessing import StandardScaler, RobustScaler, MinMaxScaler
-from sklearn.ensemble import BaggingRegressor
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.svm import SVR
-from sklearn.linear_model import LinearRegression, HuberRegressor, BayesianRidge, Lasso, ElasticNet, Ridge
-from sklearn.neural_network import MLPRegressor
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel, Matern, RationalQuadratic, ExpSineSquared
 
 
 from sklearn.model_selection import train_test_split
-from sklearn.multioutput import MultiOutputRegressor
-from sklearn.metrics import r2_score, mean_squared_error
 
-from keras.models import Sequential
-from keras.utils import np_utils
-from keras.layers.core import Dense, Activation, Dropout
-import keras.backend as K
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Activation, Dropout, BatchNormalization
 
 
 from pyproj import Geod
@@ -93,51 +83,43 @@ x = np.array(df[input_features].values.tolist())
 y = np.array(df[output_features].values.tolist())
 storm_ids = np.array(df['atcf_code'].values.tolist())
 
-scaler_x = MinMaxScaler()
-scaler_y = MinMaxScaler()
+scaler_x = StandardScaler()
 
 x_scaled = scaler_x.fit_transform(x)
-y_scaled = scaler_y.fit_transform(y)
 
-x_train, x_test, y_train, y_test, storm_ids_train, storm_ids_test = train_test_split(x_scaled, y_scaled, storm_ids, test_size=0.3, random_state=42)
+x_train, x_test, y_train, y_test, storm_ids_train, storm_ids_test = train_test_split(x_scaled, y, storm_ids, test_size=0.3, random_state=42)
 
 
 input_dim = x_train.shape[1]
 
 model = Sequential()
-model.add(Dense(128, input_dim=input_dim))
-model.add(Activation('relu'))
+model.add(Dense(512, input_dim=input_dim))
+model.add(BatchNormalization())
+model.add(Activation('tanh'))
+model.add(Dense(256))
+model.add(BatchNormalization())
+model.add(Activation('tanh'))
 model.add(Dense(128))
-model.add(Activation('relu'))
+model.add(BatchNormalization())
+model.add(Activation('tanh'))
 model.add(Dense(128))
-model.add(Activation('relu'))
-model.add(Dense(128))
-model.add(Activation('relu'))
-model.add(Dense(128))
-model.add(Activation('relu'))
+model.add(BatchNormalization())
+model.add(Activation('tanh'))
+model.add(Dense(64))
+model.add(BatchNormalization())
+model.add(Activation('tanh'))
 model.add(Dense(2))
 model.add(Activation('linear'))
 
-
-
 model.compile(loss='mae', optimizer='adam')
 
-model.fit(x_train, y_train, validation_data=(x_test, y_test),epochs=100)
+model.fit(x_train, y_train, validation_data=(x_test, y_test),epochs=40)
 y_pred = model.predict(x_test)
-
-y_test = scaler_y.inverse_transform(y_test)
-y_pred = scaler_y.inverse_transform(y_pred)
-
-# print(y_test)
-# print(y_pred)
-
 results = np.hstack((y_test,y_pred))
 results_df = pd.DataFrame(results)
-results_df.columns = ['lat_test', 'lon_test',
-					  'lat_pred', 'lon_pred']
+results_df.columns = ['lat_test', 'lon_test', 'lat_pred', 'lon_pred']
 
 
-print(results_df.describe())
 
 def delta_distance_azimuth(lat1,lon1,lat2,lon2):
 	pos_1 = np.hstack((lat1,lon1))
@@ -151,6 +133,7 @@ def delta_distance_azimuth(lat1,lon1,lat2,lon2):
 
 results_df['storm_id'] = storm_ids_test
 results_df['error_distance'] = delta_distance_azimuth(results_df['lat_test'].tolist(),results_df['lon_test'].tolist(),results_df['lat_pred'].tolist(),results_df['lon_pred'].tolist())
+print(results_df.describe())
 
 # print(results_df[results_df['error_distance'] > 10000])
 
@@ -173,15 +156,3 @@ plt.show()
 
 results_df.boxplot(column=['error_distance'])
 plt.show()
-
-
-# corr_df = df[input_features]
-# corr_df['latitude+24'] = df['latitude+24'].tolist()
-# corr_df['longitude+24'] = df['longitude+24'].tolist()
-
-# plt.imshow(corr_df.corr(), cmap='RdBu_r')
-# plt.colorbar()
-# tick_marks = [i for i in range(len(corr_df.columns))]
-# plt.xticks(tick_marks, corr_df.columns, rotation='vertical')
-# plt.yticks(tick_marks, corr_df.columns)
-# plt.show()
