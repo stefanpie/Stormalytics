@@ -5,10 +5,10 @@ import matplotlib
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-from pprint import pprint
 from pathlib import Path
 import datetime
 from pprint import pprint
+import os
 
 file_paths = glob.glob("../../data/cygnss/raw_data/*.nc")
 file_paths = sorted(file_paths)
@@ -35,10 +35,13 @@ datetimes = list(map(extract_dt, file_names))
 # 1300 -> 259.9 (-100.1)
 # 1725 -> 344.9 (-15.1)
 
+os.makedirs("../../data/cygnss/processed_data/", exist_ok=True)
 processed_file_paths = []
 processed_file_names = []
 
+
 for fp, fn in zip(file_paths, file_names):
+    print(fn)
     nc = Dataset(fp, "r")
     mss_min = nc["mean_square_slope"][:].filled(0).min(axis=0)
     mss_max = nc["mean_square_slope"][:].filled(0).max(axis=0)
@@ -82,17 +85,31 @@ for fp, fn in zip(file_paths, file_names):
     layers = mss + mss_u + mss_s + ws + ws_u + ws_s + ws_yslf + ws_yslf_u + ws_yslf_s
     layers_stacked = np.stack(layers, axis=-1)
     layers_cropped = layers_stacked[251:400, 1300:1725, :]
-    print(layers_cropped.shape)
+    # print(layers_cropped.shape)
 
-    fig, ax= plt.subplots(1,3)
-    ax[0].pcolormesh(layers_cropped[:,:,0])
-    ax[1].pcolormesh(layers_cropped[:,:,1])
-    ax[2].pcolormesh(layers_cropped[:,:,2])
-    plt.show()
-    input("...")
+    # n = 10
+
+    # fig, ax= plt.subplots(1,n)
+    # for i in range(n):
+    #     ax[i].pcolormesh(layers_cropped[:,:,i])
+    #     # ax[i].pcolormesh(layers_cropped[:,:,i])
+    #     # ax[i].pcolormesh(layers_cropped[:,:,i])
+    # plt.show()
+
+    fn_processed = fn.replace(".nc", ".npy")
+    fp_processed = "../../data/cygnss/processed_data/" + fn_processed
+    np.save(fp_processed, layers_cropped)
+
+    processed_file_paths.append(fp_processed)
+    processed_file_names.append(fn_processed)
+
+    nc.close()
+
+    # input("...")
 
 
-# inital_data = {"file_path": file_paths, "file_name": file_names, "datetime": datetimes}
+inital_data = {"file_path": file_paths, "file_name": file_names, "datetime": datetimes, "processed_file_path": processed_file_paths, "processed_file_name": processed_file_names}
 
-# df = pd.DataFrame(inital_data)
-# print(df)
+df = pd.DataFrame(inital_data)
+print(df)
+df.to_csv("../../data/cygnss/index.csv", index=False)
